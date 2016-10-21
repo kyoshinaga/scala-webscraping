@@ -16,6 +16,7 @@ class ScalaHtml {
     } catch {
       case e: Exception => {
         println(e.getMessage())
+        throw e.getCause()
         Nil
       }
     }
@@ -43,6 +44,7 @@ class ScalaHtml {
     if (!newFile.exists())  newFile.mkdir()
 
     for ( i <- urls){
+      println(i)
       var durl = i.split('/')
       var filename:String = durl.last
 
@@ -51,8 +53,8 @@ class ScalaHtml {
       }
       catch{
         case e:Exception => {
-          println(e.getMessage)
-          Nil
+          println("get url error %s".format(e.getMessage))
+          throw e.getCause()
         }
       }
       val regex = new Regex("""charset[ ]*=[ ]*[0-9a-z|\-|_]+""")
