@@ -17,7 +17,6 @@ class ScalaHtml {
       case e: Exception => {
         println(e.getMessage())
         throw e.getCause()
-        Nil
       }
     }
     var charset: String = null
@@ -95,7 +94,17 @@ object ScalaHtml{
     val html = new ScalaHtml
     val url = prefix(args(0), args(1).toInt)
     println(url)
-    val src = html.getURLfromSource(url)
-    html.getTextfromSource(src, "./data/%s".format(args(0)))
+    val src = try {
+      html.getURLfromSource(url)
+    }
+    catch {
+      case e:Exception => throw e.getCause()
+    }
+    try {
+      html.getTextfromSource(src, "./data/%s".format(args(0)))
+    }
+    catch {
+      case e:Exception => throw e.getCause()
+    }
   }
 }
