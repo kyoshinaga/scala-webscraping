@@ -11,7 +11,14 @@ import scala.util.matching.Regex
 class ScalaHtml {
 
   def getURLfromSource(url: String): List[String] = {
-    val src = Source.fromURL(url, "utf-8").getLines.toList
+    val src  = try {
+      Source.fromURL(url, "utf-8").getLines.toList
+    } catch {
+      case e: Exception => {
+        println(e.getMessage())
+        Nil
+      }
+    }
     var charset: String = null
     val regex = new Regex("""charset[ ]*=[ ]*[0-9a-z|\-|_]+""")
     var cnt: Int = 0
@@ -39,7 +46,15 @@ class ScalaHtml {
       var durl = i.split('/')
       var filename:String = durl.last
 
-      val src = Source.fromURL(i, "utf-8").getLines.toList
+      val src = try {
+        Source.fromURL(i, "utf-8").getLines.toList
+      }
+      catch{
+        case e:Exception => {
+          println(e.getMessage)
+          Nil
+        }
+      }
       val regex = new Regex("""charset[ ]*=[ ]*[0-9a-z|\-|_]+""")
       var cnt: Int = 0
       var tmp:String = null
@@ -75,9 +90,9 @@ object ScalaHtml{
     "http://news.yahoo.co.jp/list/?c=%s&p=%d".format(category, page)
 
   def main(args: Array[String]): Unit = {
-    println("Hello")
     val html = new ScalaHtml
     val url = prefix(args(0), args(1).toInt)
+    println(url)
     val src = html.getURLfromSource(url)
     html.getTextfromSource(src, "./data/%s".format(args(0)))
   }
