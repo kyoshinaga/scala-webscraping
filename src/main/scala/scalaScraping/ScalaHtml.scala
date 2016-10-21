@@ -70,10 +70,15 @@ class ScalaHtml {
 }
 
 object ScalaHtml{
+
+  def prefix(category: String, page: Int):String =
+    "http://news.yahoo.co.jp/list/?c=%s&p=%d".format(category, page)
+
   def main(args: Array[String]): Unit = {
     println("Hello")
     val html = new ScalaHtml
-    val src = html.getURLfromSource(args(0))
-    html.getTextfromSource(src, args(1))
+    val url = prefix(args(0), args(1).toInt)
+    val src = html.getURLfromSource(url)
+    html.getTextfromSource(src, "./data/%s".format(args(0)))
   }
 }

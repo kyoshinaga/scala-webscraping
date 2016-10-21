@@ -10,9 +10,7 @@ import scala.io.Source
 class htmlSpec extends FlatSpec with Matchers{
 
   "html" should "get source from the page" in {
-    val source = Source.fromURL("http://news.yahoo.co.jp/list/?c=domestic&p=1", "utf-8")
-    val lines = source.getLines()
-    lines.foreach(println)
+    println(ScalaHtml.prefix("domestic", 1))
     1 should be (1)
   }
 
