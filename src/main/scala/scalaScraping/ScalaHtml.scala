@@ -15,8 +15,8 @@ class ScalaHtml {
       Source.fromURL(url, "utf-8").getLines.toList
     } catch {
       case e: Exception => {
-        println(e.getMessage())
-        throw e.getCause()
+        println(e.getMessage)
+        throw e.getCause
       }
     }
     var charset: String = null
@@ -53,7 +53,7 @@ class ScalaHtml {
       catch{
         case e:Exception => {
           println("get url error %s".format(e.getMessage))
-          throw e.getCause()
+          throw e.getCause
         }
       }
       val regex = new Regex("""charset[ ]*=[ ]*[0-9a-z|\-|_]+""")
@@ -94,17 +94,12 @@ object ScalaHtml{
     val html = new ScalaHtml
     val url = prefix(args(0), args(1).toInt)
     println(url)
-    val src = try {
-      html.getURLfromSource(url)
-    }
-    catch {
-      case e:Exception => throw e.getCause()
-    }
     try {
+      val src = html.getURLfromSource(url)
       html.getTextfromSource(src, "./data/%s".format(args(0)))
     }
     catch {
-      case e:Exception => throw e.getCause()
+      case e:Exception => e.getMessage
     }
   }
 }
