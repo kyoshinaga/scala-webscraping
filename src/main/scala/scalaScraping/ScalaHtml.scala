@@ -3,12 +3,14 @@ package scalaScraping
 import java.io.{File, PrintWriter}
 
 import scala.io.Source
-import scala.util.matching.Regex
+import com.ibm.icu.text.Transliterator
 
 /**
   * Created by kenta-yoshinaga on 2016/10/19.
   */
 class ScalaHtml {
+
+  val transliterator = Transliterator.getInstance("Halfwidth-Fullwidth")
 
   def getURLfromSource(url: String): List[String] = {
     val src  = try {
@@ -19,8 +21,6 @@ class ScalaHtml {
         throw e.getCause
       }
     }
-    var charset: String = null
-    val regex = new Regex("""charset[ ]*=[ ]*[0-9a-z|\-|_]+""")
     var cnt: Int = 0
     var urls = List.empty[String]
 
@@ -56,14 +56,14 @@ class ScalaHtml {
           throw e.getCause
         }
       }
-      val regex = new Regex("""charset[ ]*=[ ]*[0-9a-z|\-|_]+""")
       var cnt: Int = 0
       var tmp:String = null
 
       for (j <- src){
         if(j.contains("hbody"))                     cnt = 1
         if(j.contains("</div><!--/.headline -->"))  cnt = 0
-        if(cnt == 1)  tmp += j
+        if(cnt == 1)
+          tmp += j
       }
 
       var tmp2 = tmp.replaceAll("<br>", "")
@@ -77,12 +77,12 @@ class ScalaHtml {
 
       if(last.trim != null && last.trim != "\n"){
         val out = new PrintWriter( dirName + "/" + filename)
-        out.write(last.stripLineEnd)
+        val outString = transliterator.transliterate(last.replace("　","").stripLineEnd)
+        out.write(outString)
         out.close
       }
     }
   }
-
 }
 
 object ScalaHtml{
